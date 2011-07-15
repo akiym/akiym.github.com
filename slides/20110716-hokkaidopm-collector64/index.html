@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Base64を再実装する</title>
+    <link rel="stylesheet" href="../static/css/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="../static/css/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+    <script type="text/javascript" src="../static/js/prettify/prettify.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1 id="base64">Base64を再実装する</h1>
+
+<ul>
+<li>Hokkaido.pm#5</li>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+        </div>
+        <div class="slide">
+<ul>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+<li>高校生</li>
+<li>Perlを使い始めて1年ちょっと</li>
+<li>こんなの書きました <a href="https://github.com/akiym/akitools/blob/master/Amon2-Setup-Flavor-Teng">Amon2::Setup::Flavor::Teng</a></li>
+<li><p>最近送ったpull-req <a href="https://github.com/xaicron/p5-www-youtube-download">WWW::YouTube::Download</a>, <a href="https://github.com/tokuhirom/Web-Query">Web::Query</a></p></li>
+<li><p>YAPC行きたい！</p></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2 id="base64">Base64とは</h2>
+        </div>
+        <div class="slide">
+<p>ABCDEFG <br />
+↓</p>
+        </div>
+        <div class="slide">
+<p>ABCDEFG <br />
+↓ <br />
+QUJDREVGRw==</p>
+        </div>
+        <div class="slide">
+<p>データを6bitずつに分割して変換する</p>
+
+<table>
+<col />
+<col />
+<col />
+<col />
+<thead>
+<tr>
+	<th>データ</th>
+	<th>文字</th>
+	<th>データ</th>
+	<th>文字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>000000</td>
+	<td>A</td>
+	<td>011010</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>000001</td>
+	<td>B</td>
+	<td>110101</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>000010</td>
+	<td>C</td>
+	<td>111110</td>
+	<td>+</td>
+</tr>
+</tbody>
+</table>
+        </div>
+        <div class="slide">
+<h2 id="base64">Base64の実装について</h2>
+        </div>
+        <div class="slide">
+<p>最近のBase64は全然イケてない</p>
+        </div>
+        <div class="slide">
+<p>どこがイケてないのか？</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>アルファベットを使っている</li>
+</ul>
+
+<p>VEhBTktTIDop</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>数字を使っている</li>
+</ul>
+
+<p>5769</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>声に出して読めない</li>
+</ul>
+
+<p>6Kqt44KA44Gq77yB</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>ひらがなが使いたい</li>
+</ul>
+
+<p>(日本人ですから)</p>
+        </div>
+        <div class="slide">
+<p>ってことで書きました。</p>
+        </div>
+        <div class="slide">
+<h3 id="acme::collector64">Acme::Collector64</h3>
+        </div>
+        <div class="slide">
+<p>Base64を日本語で書けるようにするモジュール <br />
+(まさにBase64の再実装！)</p>
+        </div>
+        <div class="slide">
+<pre><code>use utf8;
+use Acme::Collector64;
+
+my $index_table = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもらりるれろがぎぐげござじずぜぞばびぶべぼぱぴぷぺぽやゆよわ=';
+
+my $japanese64 = Acme::Collector64-&gt;new(
+    index_table =&gt; $index_table,
+);
+</code></pre>
+        </div>
+        <div class="slide">
+<p>日本語Base64 <br />
+↓ <br />
+Japanese64</p>
+        </div>
+        <div class="slide">
+<h3>クイズ</h3>
+        </div>
+        <div class="slide">
+<pre><code>ぷのばねぷげぬぱぺのきと
+</code></pre>
+
+<p>↓ Japanese64 decode</p>
+        </div>
+        <div class="slide">
+<pre><code>ぷのばねぷげぬぱぺのきと
+</code></pre>
+
+<p>↓ Japanese64 decode <br />
+<em>北海道</em></p>
+        </div>
+        <div class="slide">
+<h3 id="demodemo.htmle38182e38184e38186e38188e3818ae3818be3818de3818fe38191e38193e38195e38197e38199e3819be3819de3819fe381a1e381a4e381a6e381a8e381aae381abe381ace381ade381aee381afe381b2e381b5e381b8e381bbe381bee381bfe38280e38281e38282e38289e3828ae3828be3828ce3828de3818ce3818ee38190e38192e38194e38196e38198e3819ae3819ce3819ee381b0e381b3e381b6e381b9e381bce381b1e381b4e381b7e381bae381bde38284e38286e38288e3828f"><a href="demo.html#%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%95%E3%81%97%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A1%E3%81%A4%E3%81%A6%E3%81%A8%E3%81%AA%E3%81%AB%E3%81%AC%E3%81%AD%E3%81%AE%E3%81%AF%E3%81%B2%E3%81%B5%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%80%E3%82%81%E3%82%82%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%81%8C%E3%81%8E%E3%81%90%E3%81%92%E3%81%94%E3%81%96%E3%81%98%E3%81%9A%E3%81%9C%E3%81%9E%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B9%E3%81%BC%E3%81%B1%E3%81%B4%E3%81%B7%E3%81%BA%E3%81%BD%E3%82%84%E3%82%86%E3%82%88%E3%82%8F=">DEMO</a></h3>
+        </div>
+        <div class="slide">
+<p>何に使うの？</p>
+        </div>
+        <div class="slide">
+<p>秘密の暗号に</p>
+
+<pre><code>はきにらふぼつるぴぴきねぴぴきれぴぴさうぷしぼにぴぴさうぴぴきぐぴぴきおぴぴきろぴぴきはぴぴうう
+</code></pre>
+        </div>
+        <div class="slide">
+<p>復活の呪文に</p>
+
+<pre><code>ぴぴきのぴぴさかぴぴさうぴぴさとぴぴきすぴぴきめぴぴきすぴぴきおぴぴきよぴぴきは
+</code></pre>
+        </div>
+        <div class="slide">
+<h2>余談</h2>
+        </div>
+        <div class="slide">
+<p>別にひらがなじゃなくてもいい <br />
+<a href="demo.html#%E9%AF%A8%E9%AE%AE%E9%AD%AF%E9%AE%8E%E9%AF%89%E9%AF%9B%E9%B0%AF%E9%B1%97%E9%B1%92%E9%AF%B5%E9%B0%BA%E9%AE%92%E9%AE%AA%E9%AE%AB%E9%AE%AD%E9%AF%96%E9%B0%8D%E9%B0%90%E9%B0%AD%E9%B0%B9%E9%B0%BB%E9%B1%88%E9%AF%94%E9%B0%A1%E9%B0%95%E9%B0%A5%E9%B1%B6%E9%AD%B4%E9%B1%9A%E9%AE%83%E9%B0%A4%E9%AE%91%E9%AE%93%E9%AE%96%E9%AE%97%E9%AE%9F%E9%AE%A0%E9%AE%A8%E9%B1%B8%E9%AE%B4%E9%B1%87%E9%AE%B9%E9%AF%80%E9%AF%8A%E9%B0%B0%E9%AF%8F%E9%AF%91%E9%B1%A0%E9%AF%92%E9%AF%A1%E9%AF%A2%E9%AF%A3%E9%AF%A4%E9%AF%B0%E9%AF%B1%E9%AF%B2%E9%B0%84%E9%B0%86%E9%B0%88%E9%B0%89%E9%B0%8A%E9%B0%8C%E9%B0%92%E9%B0%93%E9%AD%9A">DEMO</a></p>
+        </div>
+        <div class="slide">
+Acme: :Collector64はオリジナルのBase64が作れる！<br />
+
+
+        </div>
+        <div class="slide">
+<p>あなたもBase64を再実装しませんか？</p>
+        </div>
+        <div class="slide">
+<p>Githubにpushしました <br />
+<a href="https://github.com/akiym/Acme-Collector64">akiym/Acme-Collector64</a></p>
+        </div>
+        <div class="slide">
+<pre><code>ぴぴきなぷげもかぺけきぶぴぴきうぴぴささぴぴきすぴぴきがぴぴききぴぴきなぴぴきぬぴぴきおぴぴきよぴぴきねぴぴきみ
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>ぴぴきなぷげもかぺけきぶぴぴきうぴぴささぴぴきすぴぴきがぴぴききぴぴきなぴぴきぬぴぴきおぴぴきよぴぴきねぴぴきみ
+</code></pre>
+
+<p>↓ Japanese64 decode</p>
+        </div>
+        <div class="slide">
+<pre><code>ぴぴきなぷげもかぺけきぶぴぴきうぴぴささぴぴきすぴぴきがぴぴききぴぴきなぴぴきぬぴぴきおぴぴきよぴぴきねぴぴきみ
+</code></pre>
+
+<p>↓ Japanese64 decode <br />
+<em>ご清聴ありがとうございました</em></p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $(document).ready(function () {
+        $('pre').addClass('prettyprint');
+        prettyPrint();
+    });
+
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
