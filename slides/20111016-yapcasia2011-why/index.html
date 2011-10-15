@@ -1,0 +1,436 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>なぜ、高校生がPerlを使うのか？</title>
+    <link rel="stylesheet" href="../static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1 id="perl">なぜ、高校生がPerlを使うのか？</h1>
+
+<ul>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+<li>YAPC::Asia 2011</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+<li>高校生</li>
+<li>北海道から来ました</li>
+<li>Perlを使い始めて1年半ちょっと</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>16歳</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>16歳</li>
+</ul>
+
+<p>Perlよりも若い！</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>Perl</li>
+<li>(Python, JavaScript)</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>これからYAPCで話しますが、</p>
+
+<p>CPAN Authorではありません。</p>
+        </div>
+        <div class="slide">
+<p>普通の高校生です</p>
+        </div>
+        <div class="slide">
+<h2 id="yapc">北海道から高校生がYAPCに来るまで</h2>
+        </div>
+        <div class="slide">
+<p><img src="logo.gif" alt="Hokkaido.pm" id="hokkaido.pm" /></p>
+
+<p>Hokkaido.pmの支援を受けて来ました。</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございます。</p>
+        </div>
+        <div class="slide">
+<h2 id="perl">Perlとの初めての出会い</h2>
+        </div>
+        <div class="slide">
+<ul>
+<li>小学生のとき、趣味でHTMLをいじる</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>小学生のとき、趣味でHTMLをいじる</li>
+<li>ホームページを作って公開した</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>レンタル掲示板を設置した</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>レンタル掲示板を設置した</li>
+<li>友達に教えた</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>レンタル掲示板を設置した</li>
+<li>友達に教えた</li>
+<li>学校の先生にも教えた</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>掲示板はレンタルだから、広告付き</p>
+        </div>
+        <div class="slide">
+<p>掲示板はレンタルだから、広告付き</p>
+
+<p><img src="bbs.png" alt="掲示板の広告" id="" /></p>
+        </div>
+        <div class="slide">
+<p>小学生には相応しくない広告</p>
+        </div>
+        <div class="slide">
+<p>先生に怒られた</p>
+        </div>
+        <div class="slide">
+<p>閉鎖</p>
+        </div>
+        <div class="slide">
+<p>自分で掲示板作ったらいいんじゃない？</p>
+        </div>
+        <div class="slide">
+<p>どうやって作るのか調べたら、こんなサイトが出てきた</p>
+        </div>
+        <div class="slide">
+<p><img src="001.png" alt="KENT WEB" id="kentweb" /></p>
+        </div>
+        <div class="slide">
+<p>これがPerlとの出会い</p>
+        </div>
+        <div class="slide">
+<p>掲示板のスクリプトをダウンロードしてきたのはいいけれど</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>よくわからない</li>
+<li>気に入らないし、自分で掲示板を作ってみたい</li>
+</ul>
+        </div>
+        <div class="slide">
+<h3 id="perl">プログラミングPerlを買った</h3>
+        </div>
+        <div class="slide">
+<p><img src="programming-perl.jpg" alt="プログラミング Perl" id="perl" /></p>
+        </div>
+        <div class="slide">
+<p>厚さに圧倒されて読まなくなった</p>
+        </div>
+        <div class="slide">
+<p>Perlなんてわからなかった</p>
+        </div>
+        <div class="slide">
+<p>自分で掲示板を作るのも諦めてしまった</p>
+        </div>
+        <div class="slide">
+<p>Perlが嫌いになった</p>
+        </div>
+        <div class="slide">
+<p>それから数年間Perlに触れる機会はなかった</p>
+        </div>
+        <div class="slide">
+<p>中学生になってからある記事をみて衝撃を受ける</p>
+        </div>
+        <div class="slide">
+<p>これを見て衝撃を受けた
+<img src="002.png" alt="ゆーすけべー日記" id="" /></p>
+        </div>
+        <div class="slide">
+<p>Yahoo画像検索から大量に画像をダウンロードしてくるスクリプト</p>
+        </div>
+        <div class="slide">
+<p>掲示板は無理だったけど、これならいけるかも</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>書いていてすごく楽しそう</li>
+<li>夢がある</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>初めて書いたプログラム</h2>
+        </div>
+        <div class="slide">
+<pre><code>use strict;
+use warnings;
+use Google::Search;
+use LWP::UserAgent;
+use File::Basename;
+
+my %opt = ( dir =&gt; '.' );
+Getopt::Long::GetOptions( \%opt, 'dir=s', 'help' );
+
+my $query = shift;
+mkdir $opt{dir} unless -e $opt{dir}; # no such directory
+
+my $search = Google::Search-&gt;Image( q =&gt; $query );
+my $ua = LWP::UserAgent-&gt;new( agent =&gt; 'Mozilla/5.0' );
+
+my $result = $search-&gt;first;
+while ($result) {
+    my $filename = File::Basename::basename($result-&gt;uri);
+    unless ($filename =~ /\.[^\.]+$/) { # no extension
+         $filename .= '.jpg';
+    }
+
+    my $filepath = Path::Class::file($opt{dir}, $filename);
+
+    print $result-&gt;number, " ", $result-&gt;uri, "\n";
+    my $response = $ua-&gt;get( $result-&gt;uri,
+                             ':content_file' =&gt; $filepath-&gt;stringify );
+    unless ($response-&gt;is_success) {
+        print "Failed to download...\n";
+    }
+
+    $result = $result-&gt;next;
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<p>Google画像検索から好きな画像を取ってくるスクリプト</p>
+        </div>
+        <div class="slide">
+<p>これがきっかけでCPANモジュールを知った</p>
+        </div>
+        <div class="slide">
+<h3 id="cpan">CPANモジュール</h3>
+        </div>
+        <div class="slide">
+<p>CPANモジュールがあるから</p>
+
+<p>ほとんど困ることはない</p>
+        </div>
+        <div class="slide">
+<p>良いところ</p>
+
+<ul>
+<li>なんでも揃っている</li>
+<li>ドキュメントがしっかりしている
+<ul>
+<li>何かあったらperldocすれば良い</li>
+<li>SYNOPSISをコピーするだけで使える</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>ソースを読まなくても、ドキュメントを読むだけで動かせるのは素晴らしい</p>
+        </div>
+        <div class="slide">
+<p>悪いところ</p>
+
+<ul>
+<li>たくさんありすぎ
+<ul>
+<li>モジュールを選ぶのが難しい</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>他人のソースコードを読んで、選ぶようになる</p>
+        </div>
+        <div class="slide">
+<p>CPANモジュールの素晴らしさに気づいた</p>
+        </div>
+        <div class="slide">
+<p>色々なスクリプトを書いているうちに</p>
+
+<p>Perlにのめり込んだ</p>
+        </div>
+        <div class="slide">
+<p>Perlにのめり込んでいる途中にあるものを見つける</p>
+        </div>
+        <div class="slide">
+<h2 id="hokkaido.pm">Hokkaido.pm</h2>
+        </div>
+        <div class="slide">
+<p>twitterで見かけた</p>
+        </div>
+        <div class="slide">
+<p>高校生だから参加しにくかった</p>
+        </div>
+        <div class="slide">
+<p>でも、勇気を出して参加した</p>
+        </div>
+        <div class="slide">
+<p>さらに空気読まないで懇親会にも参加した</p>
+        </div>
+        <div class="slide">
+<p>行ってみると</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>意外とみんな優しい</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>意外とみんな優しい</li>
+<li>モチベーションが上がる</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>意外とみんな優しい</li>
+<li>モチベーションが上がる</li>
+<li>もっとPerlに触れたくなった</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>意外とみんな優しい</li>
+<li>モチベーションが上がる</li>
+<li>もっとPerlに触れたくなった</li>
+<li>人前に出て話してみたくなった</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>情熱をもらった</p>
+        </div>
+        <div class="slide">
+<p>空気読まないで行って</p>
+
+<p>本当に良かったと思った</p>
+        </div>
+        <div class="slide">
+<p>そして「次回のHokkaido.pmでしゃべらないか」と誘われた</p>
+        </div>
+        <div class="slide">
+<p>Hokkaido.pm#5でLTをした
+<img src="003.png" alt="" /></p>
+        </div>
+        <div class="slide">
+<p>twitterとかで反応してくれた</p>
+        </div>
+        <div class="slide">
+<p>すごく嬉しかった</p>
+        </div>
+        <div class="slide">
+<p>些細なことでも本当に嬉しい</p>
+        </div>
+        <div class="slide">
+<p>そのときにこんなことを言われた
+<img src="004.png" alt="" /></p>
+        </div>
+        <div class="slide">
+<p>YAPCでも話してみたいと思った</p>
+        </div>
+        <div class="slide">
+<p>そして、YAPCに来た</p>
+        </div>
+        <div class="slide">
+<p>単純</p>
+        </div>
+        <div class="slide">
+<h2 id="perl">なぜ、Perlを使うのか？</h2>
+        </div>
+        <div class="slide">
+<p>Perlと出会って、そのまま使い続けている</p>
+        </div>
+        <div class="slide">
+<p>なぜ？</p>
+        </div>
+        <div class="slide">
+<p>PythonやRubyがあるのに？</p>
+        </div>
+        <div class="slide">
+<h3>(1) 手軽さ</h3>
+        </div>
+        <div class="slide">
+<p>Plackの登場</p>
+
+<p>Webフレームワークの登場</p>
+        </div>
+        <div class="slide">
+<p><code>plackup</code>するだけで動く</p>
+        </div>
+        <div class="slide">
+<p>複雑なことをしなくても今は手軽にできる</p>
+        </div>
+        <div class="slide">
+<p>先人が頑張ってくれたから</p>
+        </div>
+        <div class="slide">
+<h3>(2) コミュニティ</h3>
+        </div>
+        <div class="slide">
+<p>Perlを使っていくうちに</p>
+
+<p>CPAN Authorへの憧れが生まれる</p>
+        </div>
+        <div class="slide">
+<p>みんながモジュールを作って支えあっている</p>
+        </div>
+        <div class="slide">
+<h3>(3)</h3>
+        </div>
+        <div class="slide">
+<p>すべてが綺麗である必要なんかない</p>
+        </div>
+        <div class="slide">
+<p>書きたくなる気持ちって大切</p>
+        </div>
+        <div class="slide">
+<p>Perlは汚い部分もある</p>
+        </div>
+        <div class="slide">
+<p>でも、Perlでコードを書きたいと思う</p>
+        </div>
+        <div class="slide">
+<p>Perlハッカーへの憧れがあったり、</p>
+
+<p>コミュニティに貢献したい気持ちがあったりするから</p>
+        </div>
+        <div class="slide">
+<p>書きたくなる気持ちって大切</p>
+        </div>
+        <div class="slide">
+<p>すべて含めてPerlが好き</p>
+        </div>
+        <div class="slide">
+<p>Perlハッカーが好き</p>
+        </div>
+        <div class="slide">
+<p>Perlコミュニティが好き</p>
+        </div>
+        <div class="slide">
+<p>Perlが好き</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございました。</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
