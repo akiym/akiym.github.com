@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>botのつくりかた</title>
+    <link rel="stylesheet" href="../static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1 id="bot">botのつくりかた</h1>
+
+<ul>
+<li>Hokkaido.pm#6</li>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li><a href="http://twitter.com/#!/akiym">@akiym</a></li>
+<li>高校生</li>
+<li>YAPC::Asia 2011に参加してきました</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2 id="yapc::asia2011">YAPC::Asia 2011に参加してきました</h2>
+        </div>
+        <div class="slide">
+<p><img src="yapc.png" alt="YAPC" id="yapc" /></p>
+        </div>
+        <div class="slide">
+<p>Hokkaido.pmの皆様、本当にありがとうございました</p>
+        </div>
+        <div class="slide">
+<h2 id="bot">botとは</h2>
+        </div>
+        <div class="slide">
+<p><img src="zenra.png" alt="全裸bot" id="bot" /></p>
+        </div>
+        <div class="slide">
+<p>つぶやきを全裸にしてくれる(自動で)</p>
+        </div>
+        <div class="slide">
+<p>自動でやってくれるのはとても便利</p>
+        </div>
+        <div class="slide">
+<p>自動でいろいろやってくれるものを作ってみます</p>
+        </div>
+        <div class="slide">
+<p>今回はbotを作るのにAnySanというモジュールを使ってみます</p>
+
+<pre><code>% cpanm AnySan
+</code></pre>
+        </div>
+        <div class="slide">
+<h3 id="anysan">AnySanとは</h3>
+
+<pre><code>AnyEvent をベースとしたリアルタイミングメッセージング用の bot を簡単に作る為のツールキット
+</code></pre>
+        </div>
+        <div class="slide">
+<h3 id="anysan">AnySanとは</h3>
+
+<pre><code>AnyEvent をベースとしたリアルタイミングメッセージング用の bot を簡単に作る為のツールキット
+</code></pre>
+
+<ul>
+<li>簡単</li>
+<li>FriendFeed, IRC, Twitterのbotがすぐに書ける</li>
+</ul>
+        </div>
+        <div class="slide">
+<p><a href="http://perl-users.jp/articles/advent-calendar/2011/anysan/">Perl Advent Calendar Japan 2011 Anysan Track</a></p>
+        </div>
+        <div class="slide">
+<h2 id="twitterbot">Twitter bot</h2>
+        </div>
+        <div class="slide">
+<p>例: #hokkaidopm が含まれているツイートを非公式RTするbotを書く</p>
+        </div>
+        <div class="slide">
+<p>基本的にはこんな感じ</p>
+        </div>
+        <div class="slide">
+<pre><code>use strict;
+use warnings;
+use AnySan;
+use AnySan::Provider::Twitter;
+
+my $config = +{
+    consumer_key    =&gt; '',
+    consumer_secret =&gt; '',
+    token           =&gt; '',
+    token_secret    =&gt; '',
+};
+
+my $twitter = twitter
+    %$config,
+    method =&gt; 'filter',
+    track  =&gt; '#hokkaidopm';
+
+AnySan-&gt;register_listener(
+    hokkaidopm =&gt; {
+        event =&gt; 'timeline',
+        cb =&gt; sub {
+            my $receive = shift;
+            ...
+        },
+    },
+);
+
+AnySan-&gt;run;
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>AnySan-&gt;register_listener(
+    hokkaidopm =&gt; {
+        event =&gt; 'timeline',
+        cb =&gt; sub {
+            my $receive = shift;
+            return if $receive-&gt;message =~ /^RT\s+/;
+            $receive-&gt;send_reply(sprintf 'RT %s: %s', $receive-&gt;from_nickname, $receive-&gt;message);
+        },
+    },
+);
+</code></pre>
+        </div>
+        <div class="slide">
+<h4 id="demo">Demo</h4>
+        </div>
+        <div class="slide">
+<p>ほかにも</p>
+        </div>
+        <div class="slide">
+<h2 id="ircbot">IRC bot</h2>
+        </div>
+        <div class="slide">
+<p>例: <a href="http://d.hatena.ne.jp/gfx/20111120/1321795431">IRC botを駆使すると捗るらしいので手始めにlleval bot作った - Islands in the byte stream</a></p>
+        </div>
+        <div class="slide">
+<p>IRCはあまり使っていません。。</p>
+        </div>
+        <div class="slide">
+<p>IRCのほかによく使うものといえば…</p>
+        </div>
+        <div class="slide">
+<p>Skype</p>
+
+<p><img src="skype.png" alt="Skype" id="skype" /></p>
+        </div>
+        <div class="slide">
+<h2 id="skypebot">Skype bot?</h2>
+        </div>
+        <div class="slide">
+<p>AnySanはSkypeに対応していません</p>
+        </div>
+        <div class="slide">
+<p>今回はAnySanでSkype botを書けるようにしてみます</p>
+        </div>
+        <div class="slide">
+<p>SkypeのAnySan::Provider::を書く</p>
+        </div>
+        <div class="slide">
+<p>CPANで「Skype」を検索してみる</p>
+        </div>
+        <div class="slide">
+<ul>
+<li>SkypeAPI</li>
+<li>Win32::Skype</li>
+<li>Net::DBus::Skype</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>SkypeAPI <em>← Windowsのみ</em></li>
+<li>Win32::Skype <em>← Windowsのみ</em></li>
+<li>Net::DBus::Skype <em>← Linuxのみ</em></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>Skypeは少し複雑でプラットフォームごとに違いがある</p>
+        </div>
+        <div class="slide">
+<p>マルチプラットフォームに対応しているモジュールが欲しい</p>
+        </div>
+        <div class="slide">
+<h3 id="skype::any">Skype::Anyというモジュールを書いています</h3>
+        </div>
+        <div class="slide">
+<p>注意: Skype for Macに対応していません</p>
+        </div>
+        <div class="slide">
+<p><code>Skype::Any</code>を使って<br />
+<code>AnySan::Provider::Skype</code>を書きました</p>
+        </div>
+        <div class="slide">
+<p>基本的にはこんな感じ</p>
+        </div>
+        <div class="slide">
+<pre><code>use strict;
+use warnings;
+use AnySan;
+use AnySan::Provider::Skype;
+
+my $skype = skype;
+
+AnySan-&gt;register_listener(
+    url =&gt; {
+        event =&gt; 'chatmessage',
+        cb =&gt; sub {
+            my $receive = shift;
+            ...
+        },
+    },
+);
+
+AnySan-&gt;run;
+</code></pre>
+        </div>
+        <div class="slide">
+<p>例: URLを貼りつけたらすぐにそのタイトルを教えてくれるbotを書く</p>
+        </div>
+        <div class="slide">
+<pre><code>use strict;
+use warnings;
+use AnySan;
+use AnySan::Provider::Skype;
+use LWP::UserAgent;
+use URI::Find;
+
+my $ua = LWP::UserAgent-&gt;new;
+my $finder = URI::Find-&gt;new(sub {
+    my $url = shift;
+
+    my $res = $ua-&gt;get($url);
+    return $res-&gt;code unless $res-&gt;is_success;
+
+    my ($title) = $res-&gt;decoded_content =~ m!&lt;title&gt;(.*)&lt;/title&gt;!i;
+    return $title;
+});
+
+my $skype = skype;
+
+AnySan-&gt;register_listener(
+    url =&gt; {
+        event =&gt; 'chatmessage',
+        cb =&gt; sub {
+            my $receive = shift;
+            my $message = $receive-&gt;message;
+            if ($finder-&gt;find(\$message)) {
+                $receive-&gt;send_reply($message);
+            }
+        },
+    },
+);
+
+AnySan-&gt;run;
+</code></pre>
+        </div>
+        <div class="slide">
+<h4 id="demo">Demo</h4>
+        </div>
+        <div class="slide">
+<p><code>Skype::Any</code>はもう少ししたらGithubにあげます</p>
+        </div>
+        <div class="slide">
+<h2>まとめ</h2>
+
+<ul>
+<li>AnySanを使うと簡単にbotが書けるようになる
+<ul>
+<li>ぜひ作ってみてください！</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>Skype::Any作ってます
+<ul>
+<li>Macに対応していません
+<ul>
+<li><em>Cocoa::Skype</em>?</li>
+</ul></li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>ありがとうございました</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
