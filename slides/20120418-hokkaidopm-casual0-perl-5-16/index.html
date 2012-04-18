@@ -1,0 +1,461 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>perl-5.16</title>
+    <link rel="stylesheet" href="static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1>perl-5.16</h1>
+
+<ul>
+<li>ビギナーズセッション(5分?)</li>
+<li>akiym</li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>注意</h3>
+
+<ul>
+<li>これから紹介するのは<em>perl-5.15.9</em>までの変更です
+<ul>
+<li>(まだperl-5.16リリースされてないので)</li>
+</ul></li>
+<li>ほとんどがperldeltaの紹介です</li>
+<li>間違っているところや質問がありましたら途中でつっこみ入れてください</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>まずはじめに</h2>
+        </div>
+        <div class="slide">
+<p>おてもとのperlでお試しください</p>
+
+<pre><code>% perl -v
+</code></pre>
+        </div>
+        <div class="slide">
+<p>ほとんどの人はこのように表示されるはずです。</p>
+
+<pre><code>This is perl 5, version 15, subversion 9 (v5.15.9) built for darwin-2level
+</code></pre>
+        </div>
+        <div class="slide">
+<p>新機能の紹介の前に…</p>
+        </div>
+        <div class="slide">
+<h2>おさらい</h2>
+
+<p><em>5.10.0</em>から<em>5.14.2</em>まで</p>
+        </div>
+        <div class="slide">
+<h3>5.10</h3>
+
+<ul>
+<li><code>//</code> (defined-or)</li>
+<li><code>~~</code> (smart match)</li>
+</ul>
+        </div>
+        <div class="slide">
+<h4><code>//</code> (defined-or)</h4>
+
+<pre><code>$foo ||= 'bar';
+</code></pre>
+
+<p>例えば:</p>
+
+<pre><code>sub foo {
+    my ($foo) = @_;
+    $foo ||= 'bar';
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>//</code> (defined-or)</h4>
+
+<pre><code>$foo ||= 'bar';
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>$foo = 'bar' unless defined $foo;
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>//</code> (defined-or)</h4>
+
+<pre><code>$foo //= 'bar';
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>~~</code> (smart match)</h4>
+
+<pre><code>my $enc = 'utf8';
+die unless $enc eq 'utf8' || $enc eq 'shiftjis' || $enc eq 'euc-jp';
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>~~</code> (smart match)</h4>
+
+<pre><code>my $enc = 'utf8';
+die unless $enc eq 'utf8' || $enc eq 'shiftjis' || $enc eq 'euc-jp';
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>my $enc = 'utf8';
+die unless $enc =~ /^(?:utf8|shiftjis|euc-jp)$/;
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>~~</code> (smart match)</h4>
+
+<pre><code>die unless 'utf8' ~~ [qw/utf8 shiftjis euc-jp/];
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>5.12</h3>
+
+<ul>
+<li><code>...</code> (yada yada)</li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>5.14</h3>
+
+<ul>
+<li><code>push $arrayref, @stuff;</code></li>
+<li><code>package Foo {}</code></li>
+<li><code>s///r</code></li>
+</ul>
+        </div>
+        <div class="slide">
+<h4><code>push $arrayref, @stuff;</code></h4>
+
+<p>一部の組み込み関数がリファレンスを受け取ることができるようになりました</p>
+
+<pre><code>push, unshift, pop, shift, splice, keys, values, each
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>package Foo {}</code></h4>
+
+<p>packageがブロックを受け取ることができるようになりました</p>
+        </div>
+        <div class="slide">
+<pre><code>{
+    package Foo;
+    ...
+}
+{
+    package Bar;
+    ...
+}
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>package Foo {
+    ...
+}
+package Bar {
+    ...
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<h3><code>s///r</code></h3>
+
+<p>非破壊的なs///</p>
+
+<pre><code>my $foo = 'foobar';
+(my $bar = $foo) =~ s/foo/chars/;
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>my $foo = 'foobar';
+my $bar = $foo =~ s/foo/chars/r;
+</code></pre>
+        </div>
+        <div class="slide">
+<h3><code>feature</code> プラグマ</h3>
+
+<ul>
+<li>5.10
+<ul>
+<li>switch</li>
+<li>say</li>
+<li>state</li>
+</ul></li>
+<li>5.12
+<ul>
+<li>unicode_string</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>おさらい終わり</p>
+        </div>
+        <div class="slide">
+<h2>5.16の新機能の紹介</h2>
+        </div>
+        <div class="slide">
+<h2><code>feature</code> プラグマ</h2>
+        </div>
+        <div class="slide">
+<ul>
+<li>say</li>
+<li>state</li>
+<li>switch</li>
+<li>unicode_strings</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>say</li>
+<li>state</li>
+<li>switch</li>
+<li>unicode_strings</li>
+<li><em>unicode_eval</em>, <em>evalbytes</em></li>
+<li><em>current_sub</em></li>
+<li><em>array_base</em></li>
+<li><em>fc</em></li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>unicode_eval, evalbytes</h3>
+        </div>
+        <div class="slide">
+<h4>unicode_eval</h4>
+
+<p>evalが<code>use utf8;</code>を無視するようになります</p>
+        </div>
+        <div class="slide">
+<h4>evalbytes</h4>
+
+<p><em><code>evalbytes()</code></em></p>
+
+<p>バイト列ではなく、文字列が渡されると例外を投げます</p>
+        </div>
+        <div class="slide">
+<h3>current_sub</h3>
+
+<p><em><code>__SUB__</code></em></p>
+
+<p>現在のサブルーチンのコードリファレンスを返します</p>
+        </div>
+        <div class="slide">
+<p><a href="http://d.hatena.ne.jp/amachang/20080501/1209623634">Perl で JS の arguments.callee 的なことしようと思ってハマった</a></p>
+        </div>
+        <div class="slide">
+<p><a href="http://d.hatena.ne.jp/amachang/20080501/1209623634">Perl で JS の arguments.callee 的なことしようと思ってハマった</a></p>
+
+<p>↓</p>
+
+<p><a href="http://d.hatena.ne.jp/tokuhirom/20080501/1209625789">それDevel::Caller でできるよ</a></p>
+        </div>
+        <div class="slide">
+<p><a href="http://d.hatena.ne.jp/amachang/20080501/1209623634">Perl で JS の arguments.callee 的なことしようと思ってハマった</a></p>
+
+<p>↓</p>
+
+<p><a href="http://d.hatena.ne.jp/tokuhirom/20080501/1209625789">それDevel::Caller でできるよ</a></p>
+
+<p>↓</p>
+
+<p>それ<code>__SUB__</code>で</p>
+        </div>
+        <div class="slide">
+<pre><code>use Devel::Caller qw(caller_cv);
+
+sub {
+    my $c = shift;
+    print "$c\n";
+    caller_cv(0)-&gt;($c) if $c--;
+}-&gt;(10);
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>use 5.016;
+
+sub {
+    my $c = shift;
+    say $c;
+    __SUB__-&gt;($c) if $c--;
+}-&gt;(10);
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>array_base</h3>
+
+<p>レガシーな変数<code>$[</code>を<em>有効に</em>します</p>
+
+<p>(配列の起点を変更できます)</p>
+        </div>
+        <div class="slide">
+<p>今までは<code>$[</code>は<em>deprecated</em>でしたが</p>
+        </div>
+        <div class="slide">
+<p>今までは<code>$[</code>は<em>deprecated</em>でしたが</p>
+
+<p>5.16からは<em>array_baseを有効にしないと使えなくなります</em></p>
+        </div>
+        <div class="slide">
+<h3>fc</h3>
+
+<p><em><code>fc()</code></em></p>
+
+<p>foldcase</p>
+        </div>
+        <div class="slide">
+<p>文字列を大文字小文字区別しないで比較したい</p>
+
+<pre><code>print lc('ß') eq lc('ss') ? 1 : 0; # =&gt; 0
+print uc('ß') eq uc('ss') ? 1 : 0; # =&gt; 1
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>print 'ß' =~ /ss/i ? 1 : 0;
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>print fc('ß') eq fc('ss') ? 1 : 0;
+</code></pre>
+        </div>
+        <div class="slide">
+<p>featureプラグマ終わり</p>
+        </div>
+        <div class="slide">
+<h3><code>use VERSION</code></h3>
+
+<pre><code>use 5.008001;
+</code></pre>
+        </div>
+        <div class="slide">
+<p>今まで</p>
+
+<ul>
+<li>VERSION <em>以上</em>のperlで動きます
+<ul>
+<li>(VERSION以下のperlでは動きません)</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>これから</p>
+
+<ul>
+<li>VERSIONのperlの動作をします</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>ところで、use VERSIONしたら何をしてくれるのか</p>
+        </div>
+        <div class="slide">
+<pre><code>use 5.010;
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>use feature ':5.10'; # say state switch
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>use 5.012;
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>use strict;
+use feature ':5.12'; # say state switch unicde_strings
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>use 5.016;
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>use 5.016;
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>use strict;
+use feature ':5.16';
+</code></pre>
+        </div>
+        <div class="slide">
+<p>5.16からはすべてのバージョンのfeatureの動作が少し変わります</p>
+        </div>
+        <div class="slide">
+<pre><code>:5.10  say state switch array_base
+
+:5.12  say state switch unicode_strings array_base
+
+:5.14  say state switch unicode_strings array_base
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>:5.10  say state switch array_base
+
+:5.12  say state switch unicode_strings array_base
+
+:5.14  say state switch unicode_strings array_base
+
+:5.16  say state switch unicode_strings
+       unicode_eval evalbytes current_sub fc
+</code></pre>
+
+<p>↑ array_baseがない！</p>
+        </div>
+        <div class="slide">
+<p>つまり、use VERSIONは</p>
+
+<ul>
+<li>VERSIONのperlの動作をします</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>追加されたモジュール</h2>
+
+<ul>
+<li>arybase</li>
+<li>PerlIO::mmap</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>削除されたモジュール</h2>
+
+<ul>
+<li>Devel::DProf</li>
+<li>Shell</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>5.16のまとめ</h2>
+
+<ul>
+<li><code>$[</code>がいなくなりました</li>
+<li><code>use 5.016;</code>は「5.16で動作するよ」</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>以上です</p>
+
+<p>ありがとうございました</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
