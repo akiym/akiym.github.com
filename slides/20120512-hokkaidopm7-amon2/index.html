@@ -1,0 +1,630 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ゼロからはじめるAmon2</title>
+    <link rel="stylesheet" href="static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1>ゼロからはじめるAmon2</h1>
+
+<ul>
+<li>akiym</li>
+<li>Hokkaido.pm #7</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li>akiym</li>
+<li><p>高校生</p></li>
+<li><p>WAF初心者です。</p></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>イントロダクション</h2>
+
+<ul>
+<li>WAFとは？</li>
+<li>Amon2の基本的な使い方を紹介</li>
+<li>実践</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>初心者向けです</p>
+        </div>
+        <div class="slide">
+<h2>WAFとは</h2>
+
+<p>Web Application Framework</p>
+        </div>
+        <div class="slide">
+<p>PerlのWAFといえば</p>
+
+<ul>
+<li>Catalyst</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>PerlのWAFといえば</p>
+
+<ul>
+<li>Catalyst
+<ul>
+<li>ゼロからはじめるのはちょっと…</li>
+<li>学ぶことが多すぎる</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>なるべく学ぶことは少なくしたい</p>
+
+<p>再入門に時間なんてかけてられない</p>
+        </div>
+        <div class="slide">
+<p>軽量フレームワークがいい</p>
+        </div>
+        <div class="slide">
+<p>Perlにおける軽量WAF</p>
+
+<ul>
+<li>Amon2</li>
+<li>Dancer</li>
+<li>Mojolicious</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2><a href="http://amon.64p.org/">Amon2</a></h2>
+
+<ul>
+<li><a href="http://search.cpan.org/~tokuhirom/Amon2/">tokuhirom/Amon2</a></li>
+<li>軽量WAF</li>
+<li>jQuery, bootstrapが同梱されている</li>
+<li>Text::Xslate</li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>セキュリティ
+<ul>
+<li>CSRF</li>
+<li>クリックジャッキング</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p><a href="http://prepan.org/">PrePAN</a>がAmon2を使っているみたいです。</p>
+
+<p><a href="https://github.com/prepan-developers/prepan">https://github.com/prepan-developers/prepan</a></p>
+        </div>
+        <div class="slide">
+<h3>インストール</h3>
+
+<pre><code>% cpanm Amon2
+</code></pre>
+        </div>
+        <div class="slide">
+<p>スケルトンを作成する</p>
+
+<pre><code>% amon2-setup.pl MyApp
+% cd MyApp
+% plackup app.psgi
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>% tree
+.
+├── Makefile.PL
+├── app.psgi
+├── config
+│   ├── deployment.pl
+│   ├── development.pl
+│   └── test.pl
+├── db
+│   └── development.db
+├── lib
+│   ├── MyApp
+│   │   ├── Web
+│   │   │   └── Dispatcher.pm
+│   │   └── Web.pm
+│   └── MyApp.pm
+├── sql
+│   ├── mysql.sql
+│   └── sqlite.sql
+├── static
+│   ├── 404.html
+│   ├── 500.html
+│   ├── 502.html
+│   ├── 503.html
+│   ├── 504.html
+│   ├── bootstrap
+│   │   ├── bootstrap-dropdown.js
+│   │   ├── bootstrap-tooltip.js
+│   │   └── bootstrap.css
+│   ├── css
+│   │   └── main.css
+│   ├── img
+│   ├── js
+│   │   ├── jquery-1.7.2.min.js
+│   │   └── main.js
+│   └── robots.txt
+├── t
+│   ├── 00_compile.t
+│   ├── 01_root.t
+│   ├── 02_mech.t
+│   ├── 03_assets.t
+│   ├── 06_jslint.t
+│   └── Util.pm
+├── tmpl
+│   ├── include
+│   │   ├── layout.tt
+│   │   └── pager.tt
+│   └── index.tt
+└── xt
+    ├── 02_perlcritic.t
+    └── 03_pod.t
+
+15 directories, 34 files
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>ディレクトリ構造</h3>
+
+<pre><code>├── app.psgi
+├── config
+│   ├── deployment.pl
+│   ├── development.pl
+│   └── test.pl
+├── db
+│   └── development.db
+├── lib
+│   ├── MyApp
+│   │   ├── Web
+│   │   │   └── Dispatcher.pm
+│   │   └── Web.pm
+│   └── MyApp.pm
+├── sql
+│   ├── mysql.sql
+│   └── sqlite.sql
+└── tmpl
+    ├── include
+    │   ├── layout.tt
+    │   └── pager.tt
+    └── index.tt
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>amon2-setup.pl</h3>
+
+<p>スケルトンを作成します</p>
+
+<pre><code>% amon2-setup.pl --flavor=Basic MyApp
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>flavor</h4>
+
+<ul>
+<li><code>Basic</code>
+<ul>
+<li>デフォルトのflavor</li>
+</ul></li>
+<li><code>Large</code>
+<ul>
+<li>admin画面とかほしいときに</li>
+<li>規模が大きめのサイトを作るときに</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li><code>Lite</code>
+<ul>
+<li>Amon2::Lite</li>
+<li>1枚のスクリプトにまとめたいときに</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>Amon2の基本</h2>
+        </div>
+        <div class="slide">
+<h3>$c</h3>
+
+<p>context</p>
+
+<pre><code>get '/' =&gt; sub {
+    my ($c) = @_;
+    my $foo = $c-&gt;req-&gt;param('foo');
+    return $c-&gt;render('index.tt' =&gt; {
+        bar =&gt; 'bar',
+    });
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>request</h3>
+
+<p><code>Amon2::Web::Request</code></p>
+
+<p>Plack::Requestを継承したもの</p>
+
+<pre><code>get '/' =&gt; sub {
+    my ($c) = @_;
+    $c-&gt;req; # Amon2::Web::Request
+    my $page = $c-&gt;req-&gt;param('page');
+
+    ...
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>response</h3>
+
+<p><code>Amon2::Web::Response</code></p>
+
+<p>中身は<code>Plack::Response</code>と変わりません</p>
+
+<pre><code>get '/' =&gt; sub {
+    my ($c) = @_;
+    return $c-&gt;create_response(
+        200,
+        ['Content-Type' =&gt; 'text/plain'],
+        ['Hello!']
+    );
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<ul>
+<li><code>$c-&gt;render()</code></li>
+<li><code>$c-&gt;redirect()</code></li>
+<li><code>$c-&gt;res_404()</code></li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>config</h3>
+
+<pre><code>$c-&gt;config-&gt;{'DBI'};
+</code></pre>
+        </div>
+        <div class="slide">
+<ul>
+<li>config/development.pl</li>
+<li>config/deployment.pl</li>
+<li>config/test.pl</li>
+</ul>
+
+<p>PLACK_ENVでconfigが切り替わります</p>
+
+<pre><code>% plackup -E deployment app.psgi
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>dispatcher</h3>
+
+<p>Router::Simple</p>
+        </div>
+        <div class="slide">
+<p>スケルトン</p>
+
+<p><code>lib/MyApp/Web/Dispatcher.pm</code></p>
+
+<pre><code>package MyApp::Web::Dispatcher;
+use strict;
+use warnings;
+use utf8;
+use Amon2::Web::Dispatcher::Lite;
+
+any '/' =&gt; sub {
+    my ($c) = @_;
+    $c-&gt;render('index.tt');
+};
+
+1;
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>get '/' =&gt; sub {
+};
+
+post '/' =&gt; sub {
+};
+
+any '/' =&gt; sub {
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>get '/entry/{entry_id}' =&gt; sub {
+    my ($c, $args) = @_;
+    $args-&gt;{entry_id};
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>view</h3>
+
+<p>Text::Xslate</p>
+
+<ul>
+<li><code>tmpl/</code></li>
+</ul>
+        </div>
+        <div class="slide">
+<pre><code>get '/' =&gt; sub {
+    my ($c) = @_;
+    return $c-&gt;render('index.tt' =&gt; {
+        foo =&gt; 'bar',
+    });
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<p>基本的にはこんな感じです</p>
+        </div>
+        <div class="slide">
+<h3>plugin (1)</h3>
+
+<ul>
+<li>Web::CSRFDefender
+<ul>
+<li>CSRF対策</li>
+<li>トークンを埋め込む</li>
+</ul></li>
+<li>Web::FillInFormLite
+<ul>
+<li><code>$c-&gt;fillin_form()</code></li>
+<li>HTML::FillInForm::Lite</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>Web::JSON
+<ul>
+<li><code>$c-&gt;render_json()</code></li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>plugin (2)</h3>
+
+<ul>
+<li>Amon2::Auth
+<ul>
+<li>Twitter, Github, Facebook, Loctouch</li>
+<li>Twitterでログイン</li>
+</ul></li>
+<li>Amon2::DBI
+<ul>
+<li><code>$c-&gt;dbh</code></li>
+<li>DBI</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>実際にウェブアプリを作ってみる</h2>
+        </div>
+        <div class="slide">
+<h3>1) オレオレGyazo</h3>
+        </div>
+        <div class="slide">
+<p>使用するモジュール</p>
+
+<ul>
+<li>Amon2::DBI</li>
+</ul>
+        </div>
+        <div class="slide">
+<pre><code>% amon2-setup.pl Gyazo
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>Gyazoの仕様</h4>
+
+<ul>
+<li><code>/api/upload</code>に画像データをPOST
+<ul>
+<li>アップロードされた画像のURLを返す</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>セッションは必要ない
+<ul>
+<li>app.psgi</li>
+</ul></li>
+<li>Web::FillInFormLite, Web::CSRFDefenderプラグインは必要ない
+<ul>
+<li>lib/Gyazo/Web.pm</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>今回はdispatcherにベタ書きします</p>
+        </div>
+        <div class="slide">
+<pre><code>post '/api/upload' =&gt; sub {
+    my ($c) = @_;
+    my $image = $c-&gt;req-&gt;upload('imagedata') or die;
+    die unless $image-&gt;size &lt; 5 * 1024 * 1024; # filesize is less than 5MB.
+
+    my $imagedata = do {
+        open my $fh, '&lt;', $image-&gt;path or die $!;
+        local $/; &lt;$fh&gt;;
+    };
+    die unless $imagedata =~ /^\x89PNG\x0d\x0a\x1a\x0a/; # .png format only.
+
+    my $hash = md5_hex($imagedata);
+    my $filename = File::Spec-&gt;catfile($c-&gt;base_dir, 'dat', "$hash.png");
+    unless (-e $filename) {
+        open my $fh, '&gt;', $filename or die $!;
+        print {$fh} $imagedata or die $!;
+    }
+
+    my $image_url = $c-&gt;req-&gt;base . "dat/$hash.png";
+
+    return $c-&gt;create_response(200, [], [$image_url]);
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<p><code>app.psgi</code></p>
+
+<pre><code>builder {
+    enable 'Plack::Middleware::Static',
+        path =&gt; qr{^(?:/static/|/dat/)},
+        root =&gt; File::Spec-&gt;catdir(dirname(__FILE__));
+</code></pre>
+        </div>
+        <div class="slide">
+<p>完成</p>
+        </div>
+        <div class="slide">
+<p>これだけだと面白くないので短縮URL機能もつけてみます</p>
+        </div>
+        <div class="slide">
+<p><code>sql/sqlite.sql</code>を書き換えます</p>
+
+<pre><code>CREATE TABLE IF NOT EXISTS gyazo (
+    image_key CHAR(6) PRIMARY KEY,
+    url       TEXT
+);
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>    my $key = sub {
+        # dup check
+        {
+            my $key = $c-&gt;dbh-&gt;selectrow_array(q{
+                SELECT image_key FROM gyazo WHERE url=? LIMIT 1
+            }, {}, $image_url);
+            return $key if $key;
+        };
+        # create new one.
+        {
+            my @chars = ( 'A'..'Z', 'a'..'z', '0'..'9' );
+            my $key;
+            for (1..6) {
+                $key .= $chars[int rand @chars];
+            }
+            $c-&gt;dbh-&gt;do(q{INSERT INTO gyazo (image_key, url) VALUES (?, ?)}, {}, $key, $image_url);
+
+            return $key;
+        }
+    }-&gt;();
+
+    my $tiny_url = $c-&gt;req-&gt;base . $key;
+    return $c-&gt;create_response(200, [], [$tiny_url]);
+</code></pre>
+        </div>
+        <div class="slide">
+<p>短縮URLにアクセスしたら画像のURLにリダイレクトするようにします</p>
+
+<pre><code>get '/{key}' =&gt; sub {
+    my ($c, $args) = @_;
+
+    my $image_url = $c-&gt;dbh-&gt;selectrow_array(q{
+        SELECT url FROM gyazo WHERE image_key=? LIMIT 1
+    }, {}, $args-&gt;{key});
+
+    if ($image_url) {
+        return $c-&gt;redirect($image_url);
+    } else {
+        return $c-&gt;res_404();
+    }
+};
+</code></pre>
+        </div>
+        <div class="slide">
+<p>ちゃんと動くかな</p>
+        </div>
+        <div class="slide">
+<h3>おまけ: KENT WEB</h3>
+        </div>
+        <div class="slide">
+<pre><code>#!/usr/bin/env perl
+
+#┌─────────────────────────────────
+#│ LightBoard : light.cgi - 2012/03/25
+#│ Copyright (c) KentWeb
+#│ http://www.kent-web.com/
+#└─────────────────────────────────
+
+# モジュール宣言
+use strict;
+use CGI::Carp qw(fatalsToBrowser);
+use lib "./lib";
+use Jcode;
+
+# 設定ファイル認識
+require "./init.cgi";
+my %cf = &amp;init;
+
+# データ受理
+my %in = &amp;parse_form;
+
+# 処理分岐
+if ($in{mode} eq 'find') { &amp;find_data; }
+if ($in{mode} eq 'note') { &amp;note_page; }
+if ($in{mode} eq 'past') { &amp;past_page; }
+if ($in{mode} eq 'del_log') { &amp;del_log; }
+&amp;bbs_list;
+</code></pre>
+        </div>
+        <div class="slide">
+<p>Amon2で書き直しましょう</p>
+        </div>
+        <div class="slide">
+<p>使用するモジュール</p>
+
+<ul>
+<li>Amon2::DBI</li>
+<li>Teng</li>
+<li>FormValidator::Lite</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>ちゃんと動くかな</p>
+        </div>
+        <div class="slide">
+<h2>まとめ</h2>
+        </div>
+        <div class="slide">
+<p>今回はAmon2を紹介しました。</p>
+
+<p>Amon2は非常にシンプルなWAFで、使い勝手がいいので再入門におすすめです。</p>
+        </div>
+        <div class="slide">
+<p>とはいっても、WAFって好みだと思うので自分に合ったWAFを使うのが一番だと思います。</p>
+
+<ul>
+<li>Catalyst</li>
+<li>Mojolicious</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>Amon2はコードも読みやすいし、複雑なことをしていないので個人的におすすめです。</p>
+        </div>
+        <div class="slide">
+<p>質問があれば</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございました</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
