@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>PerlにおけるモダンなWAFの対処法 (1)</title>
+    <link rel="stylesheet" href="../static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1>PerlにおけるモダンなWAFの対処法 (1)</h1>
+
+<ul>
+<li>akiym</li>
+<li>Hokkaido.pm Casual#1</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li>akiym</li>
+<li>高校生</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>モダンなWAFの対処法</h2>
+        </div>
+        <div class="slide">
+<p>こんなときに便利なtipsを紹介します(予定)</p>
+
+<ul>
+<li>オレオレWAFを実装したいとき</li>
+<li>既存のWAFに手を加えたいとき</li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>(1) パラメータの話</h3>
+
+<pre><code>-&gt;parameters;
+-&gt;param();
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>Q.</h4>
+
+<p>Tatsumakiでデコードされたパラメータが返ってこない</p>
+
+<ul>
+<li>Plack 0.99*以降</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>Tatsumaki::Request</p>
+
+<ul>
+<li>Plack::Request</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>eg/chat/app.psgi</p>
+
+<pre><code>my $v = $self-&gt;request-&gt;parameters;
+my $html = $self-&gt;format_message($v-&gt;{text}); # バイト列
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>対処法1</h4>
+
+<pre><code>use Encode ();
+
+my $v = $self-&gt;request-&gt;parameters;
+my $html = $self-&gt;format_message(Encode::decode_utf8($v-&gt;{text}));
+</code></pre>
+        </div>
+        <div class="slide">
+<p>解決したけど。。</p>
+        </div>
+        <div class="slide">
+<h4>対処法2</h4>
+
+<p>本体に手を加える</p>
+
+<p>元々のコード</p>
+
+<pre><code>package Tatsumaki::Request;
+use parent qw(Plack::Request);
+
+sub _build_parameters {
+    my $self = shift;
+
+    my $params = $self-&gt;SUPER::_build_parameters();
+
+    my $decoded_params = {};
+    while (my($k, $v) = each %$params) {
+        $decoded_params-&gt;{decode_utf8($k)} = ref $v eq 'ARRAY'
+            ? [ map decode_utf8($_), @$v ] : decode_utf8($v);
+    }
+
+    return $decoded_params;
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<p>モダンなWAFの対処法</p>
+
+<ul>
+<li>Amon2</li>
+<li>Kossy</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>Plack::Requestのパラメータ</p>
+
+<ul>
+<li><code>$self-&gt;env-&gt;{'plack.request.body'}</code></li>
+<li><code>$self-&gt;env-&gt;{'plack.request.query'}</code></li>
+<li><code>$self-&gt;env-&gt;{'plack.request.merged'}</code></li>
+</ul>
+
+<p>Hash::MultiValueなので扱いに注意</p>
+        </div>
+        <div class="slide">
+<p>デコードしたパラメータを新しく作ってしまえばいい</p>
+
+<p>Amon2だと</p>
+
+<ul>
+<li><code>$self-&gt;{'amon2.body_parameters'}</code></li>
+<li><code>$self-&gt;{'amon2.query_parameters'}</code></li>
+<li><code>$self-&gt;env-&gt;{'amon2.request.merged'}</code></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>デコードされたパラメータと生のパラメータを分ける</p>
+
+<ul>
+<li><code>body_parameters()</code>
+<ul>
+<li><code>body_parameters_raw()</code></li>
+</ul></li>
+<li><code>query_parameters()</code>
+<ul>
+<li><code>query_parameters_raw()</code></li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li><code>parameters()</code>
+<ul>
+<li><code>parameters_raw()</code></li>
+</ul></li>
+<li><code>param()</code>
+<ul>
+<li><code>param_raw()</code></li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<pre><code>use parent qw/Plack::Request/;
+
+sub body_parameters {
+    my ($self) = @_;
+    $self-&gt;{'amon2.body_parameters'} ||= $self-&gt;_decode_parameters($self-&gt;SUPER::body_parameters());
+}
+
+sub body_parameters_raw {
+    shift-&gt;SUPER::body_parameters();
+}
+
+sub _decode_parameters {
+    my ($self, $stuff) = @_;
+
+    my $encoding = Amon2-&gt;context-&gt;encoding;
+    my @flatten = $stuff-&gt;flatten();
+    my @decoded;
+    while ( my ($k, $v) = splice @flatten, 0, 2 ) {
+        push @decoded, Encode::decode($encoding, $k), Encode::decode($encoding, $v);
+    }
+    return Hash::MultiValue-&gt;new(@decoded);
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>sub parameters {
+    my $self = shift;
+
+    $self-&gt;env-&gt;{'amon2.request.merged'} ||= do {
+        my $query = $self-&gt;query_parameters;
+        my $body  = $self-&gt;body_parameters;
+        Hash::MultiValue-&gt;new( $query-&gt;flatten, $body-&gt;flatten );
+    };
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<p>TatsumakiでもAmon2と同じように実装すればいいのでは</p>
+        </div>
+        <div class="slide">
+<pre><code>diff --git a/lib/Tatsumaki/Request.pm b/lib/Tatsumaki/Request.pm
+index 89ffe26..ae4e7f5 100644
+--- a/lib/Tatsumaki/Request.pm
++++ b/lib/Tatsumaki/Request.pm
+@@ -1,21 +1,64 @@
+ package Tatsumaki::Request;
+-use Encode;
++use Encode ();
++use Hash::MultiValue;
+ use parent qw(Plack::Request);
+
+ use Tatsumaki::Response;
+
+-sub _build_parameters {
+-    my $self = shift;
++sub body_parameters {
++    my ($self) = @_;
++    $self-&gt;{'tatsumaki.body_parameters'} ||= $self-&gt;_decode_parameters($self-&gt;SUPER::body_parameters());
++}
+
+-    my $params = $self-&gt;SUPER::_build_parameters();
++sub query_parameters {
++    my ($self) = @_;
++    $self-&gt;{'tatsumaki.query_parameters'} ||= $self-&gt;_decode_parameters($self-&gt;SUPER::query_parameters());
++}
+
+-    my $decoded_params = {};
+-    while (my($k, $v) = each %$params) {
+-        $decoded_params-&gt;{decode_utf8($k)} = ref $v eq 'ARRAY'
+-            ? [ map decode_utf8($_), @$v ] : decode_utf8($v);
++sub _decode_parameters {
++    my ($self, $stuff) = @_;
++
++    my @flatten = $stuff-&gt;flatten();
++    my @decoded;
++    while ( my ($k, $v) = splice @flatten, 0, 2 ) {
++        push @decoded, Encode::decode_utf8($k), Encode::decode_utf8($v);
+     }
++    return Hash::MultiValue-&gt;new(@decoded);
++}
++
++sub parameters {
++    my $self = shift;
++
++    $self-&gt;env-&gt;{'tatsumaki.request.merged'} ||= do {
++        my $query = $self-&gt;query_parameters;
++        my $body  = $self-&gt;body_parameters;
++        Hash::MultiValue-&gt;new( $query-&gt;flatten, $body-&gt;flatten );
++    };
++}
++
++sub body_parameters_raw {
++    shift-&gt;SUPER::body_parameters();
++}
++sub query_parameters_raw {
++    shift-&gt;SUPER::query_parameters();
++}
++sub parameters_raw {
++    my $self = shift;
++
++    $self-&gt;env-&gt;{'plack.request.merged'} ||= do {
++        my $query = $self-&gt;SUPER::query_parameters();
++        my $body  = $self-&gt;SUPER::body_parameters();
++        Hash::MultiValue-&gt;new( $query-&gt;flatten, $body-&gt;flatten );
++    };
++}
++sub param_raw {
++    my $self = shift;
++
++    return keys %{ $self-&gt;parameters_raw } if @_ == 0;
+
+-    return $decoded_params;
++    my $key = shift;
++    return $self-&gt;parameters_raw-&gt;{$key} unless wantarray;
++    return $self-&gt;parameters_raw-&gt;get_all($key);
+ }
+
+ sub new_response {
+</code></pre>
+        </div>
+        <div class="slide">
+<p>デコードされたパラメータが返ってくるようになりました</p>
+        </div>
+        <div class="slide">
+<p>解決</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございました</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
