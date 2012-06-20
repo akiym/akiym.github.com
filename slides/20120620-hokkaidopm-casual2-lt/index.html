@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>(inc|dec)rement の話</title>
+    <link rel="stylesheet" href="../static/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1>(inc|dec)rement の話</h1>
+
+<ul>
+<li>Hokkaido.pm Casual #2</li>
+<li>akiym</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li>akiym</li>
+<li>高校生</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>カジュアルLT</h2>
+        </div>
+        <div class="slide">
+<h3>(inc|dec)rement</h3>
+
+<ul>
+<li>変数の値に1を足す、引く</li>
+</ul>
+        </div>
+        <div class="slide">
+<pre><code># increment
+$foo++;
+++$foo;
+
+# decrement
+$bar--;
+--$bar;
+</code></pre>
+        </div>
+        <div class="slide">
+<p>ただし、これはダメ</p>
+
+<pre><code>1++; #=&gt; Can't modify constant item in postincrement (++)
+1--; #=&gt; Can't modify constant item in postdecrement (--)
+</code></pre>
+        </div>
+        <div class="slide">
+<h2>クイズ</h2>
+
+<p>わかった方は答えてください</p>
+        </div>
+        <div class="slide">
+<h3>Q1</h3>
+
+<pre><code>my $foo = 0;
+my $bar = $foo++;
+
+$bar; #=&gt; ?
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>A1</h3>
+
+<pre><code>my $foo = 0;
+my $bar = $foo;
+$foo++;
+
+$bar; #=&gt; 0
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>my $foo = 0;
+my $bar = ++$foo;
+
+$bar; #=&gt; 1
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>Q2</h3>
+
+<pre><code>my $foo = 1;
+my $bar = ++$foo + $foo++;
+$bar #=&gt; ?
+</code></pre>
+
+<hr />
+
+<p><a href="http://twitter.com/antibayes/status/215357373546635266">https://twitter.com/antibayes/status/215357373546635266</a></p>
+        </div>
+        <div class="slide">
+<h3>A2</h3>
+
+<p>ひとつの文で、変数を2回変更することは<em>定義されていない</em>らしい</p>
+
+<pre><code>my $foo = 1;
+my $bar = ++$foo + $foo++;
+$bar #=&gt; 5
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>Q3</h3>
+
+<pre><code># array ref
+my $array_ref = [];
+$array_ref++; #=&gt; ?
+
+# hash ref
+my $hash_ref = {};
+$hash_ref--; #=&gt; ?
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>A3</h3>
+
+<pre><code># array ref
+my $array_ref = [];
+$array_ref++; #=&gt; 140477031782521
+
+# $array_ref: ARRAY(0x7fc35b941878)
+
+# hash ref
+my $hash_ref = {};
+$hash_ref--; #=&gt; 140477031782280
+
+# $hash_ref: HASH(0x7fc35b941788)
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>Q4</h3>
+
+<pre><code># 文字
+my $char = 'a';
+$char++; #=&gt; ?
+
+# 文字列
+my $string = 'perl';
+$string++; #=&gt; ?
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>A4</h3>
+
+<pre><code># 文字
+my $char = 'a';
+$char++; #=&gt; 'b'
+
+# 文字列
+my $string = 'perl';
+$string++; #=&gt; 'perm'
+</code></pre>
+        </div>
+        <div class="slide">
+<p>文字列の場合は少し特殊</p>
+
+<ul>
+<li>'a'をincrementすると'b'に
+<ul>
+<li>'z'をincrementすると'aa'に</li>
+</ul></li>
+<li><code>/^[a-zA-Z]*[0-9]*\z/</code>の範囲のみ有効</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>何のためにあるの？</p>
+
+<ul>
+<li><code>'a'..'z'</code></li>
+</ul>
+        </div>
+        <div class="slide">
+<ul>
+<li>Excelの27番目の列を求めたい</li>
+</ul>
+
+<p>答えはAA</p>
+
+<pre><code>perl -le'$c="A";$c++for 2..pop;print$c' 27
+</code></pre>
+
+<hr />
+
+<p><a href="http://d.hatena.ne.jp/JunichiIto/20111102/1320253815">http://d.hatena.ne.jp/JunichiIto/20111102/1320253815</a></p>
+        </div>
+        <div class="slide">
+<p>ちなみにdecrementでは動かないようになっている</p>
+
+<pre><code>my $char = 'a';
+$char--; #=&gt; -1
+
+my $string = 'perl';
+$string--; #=&gt; -1
+</code></pre>
+        </div>
+        <div class="slide">
+<p>なぜかというと(このような実装ではない)</p>
+
+<pre><code>my $char = 'a';
+$char = $char+0; # numfication
+$char--; #=&gt; -1
+</code></pre>
+        </div>
+        <div class="slide">
+<p>Perlのincrementは奥が深い</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございました</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
