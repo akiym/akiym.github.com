@@ -17,7 +17,7 @@
         </header>
         <div class="row">
             <div class="span12">
-                <p>Perl monger. I'm going to talk "<a href="http://yapcasia.org/2012/talk/show/e20da704-d4ca-11e1-a778-37a36aeab6a4">Skype効率化</a>" in YAPC::Asia 2012.</p>
+                <p>Perl monger. I talked "<a href="http://yapcasia.org/2012/talk/show/e20da704-d4ca-11e1-a778-37a36aeab6a4">Skype効率化</a>" in YAPC::Asia 2012.</p>
                 <ul>
                     <li><a href="http://akiym.com/">akiym.com</a></li>
                     <li><a href="https://metacpan.org/author/AKIYM">metacpan.org/author/AKIYM</a></li>
@@ -29,10 +29,46 @@
             </div>
             <div class="span12">
                 <div class="page-header">
+                    <h3>products</h3>
+                </div>
+                <h4><a href="https://metacpan.org/module/Skype::Any">Skype::Any</a></h4>
+                <p>Skype API wrapper for Perl</p>
+                <pre>use strict;
+use warnings;
+use Skype::Any;
+
+my $skype = Skype::Any-&gt;new();
+$skype-&gt;message_received(sub {
+    my ($msg) = @_;
+    my $body = $msg-&gt;body;
+    if ($body eq 'ping') {
+        $msg-&gt;chat-&gt;send_message('pong');
+    }
+});
+$skype-&gt;run;
+</pre>
+                <h4><a href="https://metacpan.org/module/Acme::Collector64">Acme::Collector64</a></h4>
+                <p>Yet another Base64?</p>
+                <pre>use strict;
+use warnings;
+use utf8;
+use Acme::Collector64;
+
+my $japanese64 = Acme::Collector64-&gt;new(
+    index_table =&gt; 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもらりるれろがぎぐげござじずぜぞばびぶべぼぱぴぷぺぽやゆよわ=',
+);
+
+$japanese64-&gt;encode('Hello, world!');
+$japanese64-&gt;decode('てきにごふきやごけくほずへれぞりけち==');
+</pre>
+            </div>
+            <div class="span12">
+                <div class="page-header">
                     <h3>slides</h3>
                 </div>
                 <h4>2012</h4>
                 <ul>
+                    <li><a href="https://speakerdeck.com/u/akiym/p/skypexiao-lu-hua">Skype効率化 - YAPC::Asia 2012</a></li>
                     <li><a href="slides/20120620-hokkaidopm-casual2-lt/">(inc|dec)rement の話 - Hokkaido.pm Casual#2</a></li>
                     <li><a href="slides/20120516-hokkaidopm-casual1-waf1/">PerlにおけるモダンなWAFの対処法 (1) - Hokkaido.pm Casual#1</a></li>
                     <li><a href="slides/20120512-hokkaidopm7-amon2/">ゼロからはじめるAmon2 - Hokkaido.pm#7</a></li>
