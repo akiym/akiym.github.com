@@ -1,0 +1,446 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>これまでのPerl5についてのあらすじとこれからのperl-5.18</title>
+    <link rel="stylesheet" href="../static/css/prettify.css" type="text/css" />
+    <link rel="stylesheet" href="../static/css/slide.css" type="text/css" />
+    <script type="text/javascript" src="../static/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.presentation.js"></script>
+    <script type="text/javascript" src="../static/js/prettify.js"></script>
+</head>
+<body>
+    <div id="slides">
+        <div class="slide">
+<h1>これまでのPerl5についてのあらすじとこれからのperl-5.18</h1>
+
+<ul>
+<li>akiym</li>
+<li>Hokkaido.pm#8</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>自己紹介</h2>
+
+<ul>
+<li>akiym</li>
+<li>高3</li>
+<li>CPAN
+<ul>
+<li>Skype::Any, tacochan</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<p>間違っていたらつっこみください :)</p>
+        </div>
+        <div class="slide">
+<h2>これまでのおさらい</h2>
+
+<p>5.10 から 5.16まで、どのような機能が追加されてきたのかご紹介します。</p>
+        </div>
+        <div class="slide">
+<h3>5.10</h3>
+
+<ul>
+<li>数年ぶりのメジャーアップデート</li>
+<li>新しい演算子</li>
+<li>featureプラグマ</li>
+</ul>
+        </div>
+        <div class="slide">
+<h4>新しい演算子</h4>
+
+<p><code>//</code> defined-or, <code>~~</code> smartmatch</p>
+        </div>
+        <div class="slide">
+<h4>defined-or</h4>
+
+<pre><code>sub foo {
+    my ($foo) = @_;
+    # 引数の値($foo)がなければ、'bar'を入れておこう
+    $foo ||= 'bar';
+    return $foo;
+}
+
+foo();         # $foo is 'bar'
+foo('fooooo'); # $foo is 'fooooo'
+foo(0);        # $foo is 'bar'?
+</code></pre>
+        </div>
+        <div class="slide">
+<p>Perl5における偽である値</p>
+
+<ul>
+<li>0 (数値)</li>
+<li>'0' (文字列)</li>
+<li>'' (空文字列)</li>
+<li>undef</li>
+<li>() (空リスト)</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>前まではこのように書く必要がありました。</p>
+
+<pre><code>sub foo {
+    my ($foo) = @_;
+    $foo = 'bar' unless defined $foo;
+    return $foo;
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<p>defined-or演算子を使えばスマートに書けるようになります。</p>
+
+<pre><code>sub foo {
+    my ($foo) = @_;
+    $foo //= 'bar'; # || が傾いて // になった感じ。
+    return $foo;
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>smartmatch</h4>
+
+<pre><code>die unless $enc eq 'utf8' || $enc eq 'shiftjis' || $enc eq 'euc-jp';
+</code></pre>
+
+<p>↓それregexp</p>
+
+<pre><code>die unless $enc =~ /^(?:utf8|shiftjis|euc-jp)$/;
+</code></pre>
+
+<p>↓ それsma</p>
+
+<pre><code>die unless $enc ~~ [qw/utf8 shiftjis euc-jp/];
+</code></pre>
+        </div>
+        <div class="slide">
+<p>smartmatchは強力なものの、仕様が難しいので使いにくいという話もあります。</p>
+
+<p>see perldoc perlop</p>
+        </div>
+        <div class="slide">
+<h4>featureプラグマ</h4>
+
+<p>say, state, switch</p>
+
+<pre><code># say
+say "Hello, world!";
+print "Hello, world!\n"; # だいたいおなじ
+
+# state
+sub fetch_image {
+    my ($filename) =  @_;
+    state $ua = LWP::UserAgent-&gt;new();
+    my $res = $ua-&gt;mirror('http://example.com', $filename);
+    die $res-&gt;status_line unless $res-&gt;is_success;
+}
+
+# switch
+given () {
+    when () {
+    }
+    default {
+    }
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>5.12</h3>
+
+<ul>
+<li>... yadayada演算子
+<ul>
+<li>Unimplemented</li>
+</ul></li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>5.14</h3>
+
+<ul>
+<li>一部のビルトイン関数がリファレンスを受け取れるように</li>
+<li>package Foo {}</li>
+<li>s///r 非破壊的な置換</li>
+</ul>
+
+<p>結構すごい</p>
+        </div>
+        <div class="slide">
+<h4>一部のビルトイン関数がリファレンスを受け取れるように</h4>
+
+<pre><code>push, unshift, pop, shift, splice, keys, values, each
+</code></pre>
+
+<p>デリファレンスせずに渡すことができます。</p>
+
+<pre><code>push $arrayref, 'foo';
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>package Foo {}</h4>
+
+<pre><code>{
+    package Foo;
+
+    ...
+}
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>package Foo {
+    ...
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<h4>s///r 非破壊的な置換</h4>
+
+<pre><code>my $foo = 'foobar';
+(my $bar = $foo) =~ s/foo/chars/;
+</code></pre>
+
+<p>↓</p>
+
+<pre><code>my $foo = 'foobar';
+my $bar = $foo =~ s/foo/chars/r;
+</code></pre>
+
+<p>とか</p>
+
+<pre><code>my @foo = qw/foobar barbar bazbar/;
+my @bar = map { s/foo/chars/r } @foo; # @fooの中身が破壊されません
+</code></pre>
+        </div>
+        <div class="slide">
+<h3>5.16</h3>
+
+<ul>
+<li>use VERSIONの扱いが変更された</li>
+</ul>
+
+<p>use 5.016; は「5.16で動作するよ」</p>
+
+<p>(今までのような5.16以降で動作する、ではなく)</p>
+        </div>
+        <div class="slide">
+<p>featureプラグマで有効にできる機能が増えた</p>
+
+<pre><code>unicode_eval evalbytes current_sub array_base fc
+</code></pre>
+
+<ul>
+<li><code>__SUB__</code>のような現在のサブルーチンのcoderefを返すキーワードも</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>詳しくはこちらをご覧ください。
+<a href="http://akiym.com/slides/20120418-hokkaidopm-casual0-perl-5-16/">http://akiym.com/slides/20120418-hokkaidopm-casual0-perl-5-16/</a></p>
+        </div>
+        <div class="slide">
+<p>おさらい終わり</p>
+        </div>
+        <div class="slide">
+<h3>5.18 (5.17.0-)</h3>
+
+<p>これから紹介するのはperl-5.17.7までの変更です。</p>
+        </div>
+        <div class="slide">
+<h3>追加された機能</h3>
+        </div>
+        <div class="slide">
+<h4>lexical_subs</h4>
+
+<p>レキシカルなサブルーチン</p>
+
+<p>今まで:</p>
+
+<pre><code>{
+    my $code = sub {
+    };
+    $code-&gt;();
+}
+</code></pre>
+
+<p>これはダメ:</p>
+
+<pre><code>{
+    sub foo {
+        ...
+    }
+    foo();
+}
+
+foo();
+</code></pre>
+        </div>
+        <div class="slide">
+<p>experimentalな変更なので、いつかのバージョンで取り除かれるかもしれません。</p>
+
+<p>(5.18でも<code>use feature 'lexical_subs';</code>するとwarningが出るようになっています)</p>
+        </div>
+        <div class="slide">
+<pre><code>no warnings "experimental::lexical_subs";
+use feature 'lexical_subs';
+
+{
+    # レキシカルなサブルーチン
+    my sub foo {
+        ...
+    }
+    foo();
+}
+</code></pre>
+        </div>
+        <div class="slide">
+<pre><code>no warnings "experimental::lexical_subs";
+use feature 'lexical_subs';
+
+foo();             # パッケージのサブルーチン
+state sub foo {
+   foo();          # パッケージのサブルーチン
+}
+foo();             # stateサブルーチン
+my $ref = \&amp;foo;   # stateサブルーチンのリファレンス
+
+my sub bar { ... }
+bar();             # myサブルーチン
+</code></pre>
+        </div>
+        <div class="slide">
+<h4><code>state sub</code> と <code>my sub</code>の違い</h4>
+
+<ul>
+<li>基本的には<code>state sub</code>のほうが速い
+<ul>
+<li>myはその場で作るのに対してstateは保持するため</li>
+</ul></li>
+<li><code>my sub</code>はクロージャを作る必要があるとき使う</li>
+</ul>
+        </div>
+        <div class="slide">
+<p>our subを使うとこのようなこともできます。</p>
+
+<pre><code>no warnings 'experimental::lexical_subs';
+use feature 'lexical_subs';
+
+sub foo { ... } # bar()から呼ばれる
+
+sub bar {
+    my sub foo { ... }
+    {
+        our sub foo;
+        foo(); # 外側のfoo()が呼ばれる
+    }
+}
+
+bar();
+</code></pre>
+        </div>
+        <div class="slide">
+<p>5.18の大きな追加機能は以上です。ちょっと少ない感じもしますね。</p>
+        </div>
+        <div class="slide">
+<p>ここからは細かい話です。</p>
+        </div>
+        <div class="slide">
+<h3>5.17.7</h3>
+
+<h4>$&amp;, $`, $' を使っても遅くならないように</h4>
+
+<p>今まではこれらの変数を使うと遅くなることがありました。</p>
+
+<p>/pフラグをつけるとよいです。</p>
+        </div>
+        <div class="slide">
+<h4>レキシカルな <code>$_</code> はdeprecatedに</h4>
+
+<p>perl-5.10で追加されたレキシカルな <code>$_</code> はいまいち動作が安定しなく(みんなが)いらないなと思っていました。</p>
+        </div>
+        <div class="slide">
+<h3>5.17.6</h3>
+
+<ul>
+<li>ハッシュ関数のアルゴリズム</li>
+</ul>
+
+<p>one-at-a-timeのかわりにMurmurhash-32を使うことができるようになりました。</p>
+
+<p>その分高速化されるみたいです。</p>
+        </div>
+        <div class="slide">
+<h3>5.17.5</h3>
+
+<ul>
+<li>Unicode 6.2</li>
+</ul>
+        </div>
+        <div class="slide">
+<h3>5.17.4</h3>
+
+<ul>
+<li>lexical_subs</li>
+</ul>
+        </div>
+        <div class="slide">
+<h2>perl-5.18に向けての議論 (まだ)</h2>
+        </div>
+        <div class="slide">
+<h4>smartmatch</h4>
+
+<p>smartmatchは複雑すぎるし、わりと使う用途が限られているので、もう少し仕様を簡単にしようという話があります。</p>
+        </div>
+        <div class="slide">
+<h4>CPANPLUS</h4>
+
+<p>CPANPLUSをコアに入れたことで、CPANPLUSが依存しているたくさんのモジュールがコアに入りました。</p>
+        </div>
+        <div class="slide">
+<p>CPANPLUSの依存モジュール</p>
+
+<pre><code>File::Fetch
+Term::UI
+Module::Pluggable
+Object::Accessor
+Log::Message
+Log::Message::Simple
+Module::Loaded
+Locale::Maketext::Simple
+Archive::Extract
+Params::Check
+Module::Load::Conditional
+IPC::Cmd
+CPANPLUS
+CPANPLUS::Dist::Build
+</code></pre>
+        </div>
+        <div class="slide">
+<p>CPANPLUSとか使っている人はもういないし、コアから外してもいいんじゃないかという話があります。</p>
+        </div>
+        <div class="slide">
+<p>こんなかんじです。perl-5.18.0のリリースが楽しみですね。</p>
+        </div>
+        <div class="slide">
+<h2>さいごに</h2>
+
+<hr />
+
+<p>Perlさん、25周年おめでとうございます。</p>
+        </div>
+        <div class="slide">
+<p>ありがとうございました。</p>
+        </div>
+    </div>
+    <script>
+$(function () {
+    $(document).ready(function () {
+        $('pre').addClass('prettyprint');
+        prettyPrint();
+    });
+    $('#slides').presentation();
+});
+    </script>
+</body>
+</html>
