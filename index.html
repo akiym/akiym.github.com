@@ -3,116 +3,44 @@
 <head>
     <meta charset="utf-8" />
     <title>akiym.com</title>
-    <link rel="stylesheet" type="text/css" href="src/css/bootstrap.min.css" />
-    <style>*{font-family: monospace;}</style>
+    <style>
+* {
+    font-family: monospace;
+}
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>akiym.com</h1>
-            <p class="lead">Takumi Akiyama a.k.a. akiym</p>
-            <ul>
-                <li><a href="http://akiym.com/">akiym.com</a></li>
-                <li><a href="https://twitter.com/akiym">twitter.com/akiym</a></li>
-                <li><a href="https://github.com/akiym">github.com/akiym</a></li>
-                <li><a href="https://metacpan.org/author/AKIYM">metacpan.org/author/AKIYM</a></li>
-                <li><a href="https://www.facebook.com/akiym">www.facebook.com/akiym</a></li>
-                <li><a href="http://akiym.hateblo.jp/">akiym.hateblo.jp</a></li>
-            </ul>
-            <h4>contact</h4>
-            <address>Takumi Akiyama &lt;t.akiym at gmail.com&gt;</address>
-        </header>
-        <div class="row">
-            <div class="page-header">
-                <h3>CTF</h3>
-            </div>
-            <div class="span12">
-                <p>dodododo <a href="https://ctftime.org/team/6434">https://ctftime.org/team/6434</a></p>
-                <h4>2014</h4>
-                <ul>
-                    <li>CODEGATE Junior 2014 Finals (individual)</li>
-                </ul>
-                <h4>2013</h4>
-                <ul>
-                    <li>SECCON 2013 Finals (dodododo)</li>
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="page-header">
-                <h3>web service</h3>
-            </div>
-            <div class="span6">
-                <h4><a href="http://ctf.katsudon.org/">akictf</a></h4>
-                <p><a href="http://ctf.katsudon.org/"><img src="src/img/akictf.png" alt="akictf" /></a></p>
-                <p>Yet Another CTF?</p>
-            </div>
-            <div class="span6">
-                <h4><a href="http://sqli.katsudon.org/">SQLiPuzzle</a></h4>
-                <p><a href="http://sqli.katsudon.org/"><img src="src/img/sqlipuzzle.png" alt="sqlipuzzle" /></a></p>
-                <p>Learning SQL Injection (on Heroku)</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="page-header">
-                <h3>products</h3>
-            </div>
-            <div class="span6">
-                <h4><a href="https://metacpan.org/module/App::Tacochan">tacochan</a></h4>
-                <p>tacochan is pretty cute. She can deliver Skype message by HTTP.</p>
-                <p><img src="src/img/tacochan.png" width="400" height="300" alt="tacochan" /></p>
-                <pre>% cpanm App::Tacochan
-% tacochan
-starting httpd: http://127.0.0.1:4969/</pre>
-            </div>
-            <div class="span6">
-                <h4><a href="https://metacpan.org/module/Skype::Any">Skype::Any</a></h4>
-                <p>Skype API wrapper for Perl</p>
-                <pre>use strict;
-use warnings;
-use Skype::Any;
+    <h1>AKIYM.COM</h1>
+    <p class="lead">Takumi Akiyama a.k.a. akiym</p>
+    <p>I'm usually not active on <a href="https://twitter.com/akiym">twitter.com/akiym</a>.<br /><a href="http://akiym.hateblo.jp/">akiym.hateblo.jp</a> is my blog (Japanese). <a href="https://github.com/akiym">GitHub</a>, <a href="https://metacpan.org/author/AKIYM">CPAN</a>. My talks are on <a href="https://speakerdeck.com/akiym">Speaker Deck</a>.</p>
+    <h4>CONTACT</h4>
+    <address>Takumi Akiyama &lt;t.akiym at gmail.com&gt;</address>
 
-my $skype = Skype::Any-&gt;new();
-$skype-&gt;message_received(sub {
-    my ($msg) = @_;
-    my $body = $msg-&gt;body;
-    if ($body eq 'ping') {
-        $msg-&gt;chat-&gt;send_message('pong');
-    }
-});
-$skype-&gt;run;
-</pre>
-            </div>
-        </div>
-        <div class="row">
-            <div class="page-header">
-                <h3>slides</h3>
-            </div>
-            <div class="span12">
-                <h4>2013</h4>
-                <ul>
-                    <li><a href="https://speakerdeck.com/akiym/herokudexue-bu-chu-metefalseperl">Herokuで学ぶ、初めてのPerl - YAPC::Asia 2013</a></li>
-                    <li><a href="https://speakerdeck.com/akiym/githubzhi-mari-mosiyuru5xuan">github止まり モジュール5選 - Hokkaido.pm#10</a></li>
-                    <li><a href="https://speakerdeck.com/akiym/perl-meets-leap-motion">Perl meets Leap Motion - Hokkaido.pm#10</a></li>
-                </ul>
-                <h4>2012</h4>
-                <ul>
-                    <li><a href="slides/20121223-hokkaidopm8-lt/">これまでのPerl5についてのあらすじとこれからのperl-5.18 - Hokkaido.pm#8</a></li>
-                    <li><a href="https://speakerdeck.com/u/akiym/p/skypexiao-lu-hua">Skype効率化 - YAPC::Asia 2012</a></li>
-                    <li><a href="slides/20120620-hokkaidopm-casual2-lt/">(inc|dec)rement の話 - Hokkaido.pm Casual#2</a></li>
-                    <li><a href="slides/20120516-hokkaidopm-casual1-waf1/">PerlにおけるモダンなWAFの対処法 (1) - Hokkaido.pm Casual#1</a></li>
-                    <li><a href="slides/20120512-hokkaidopm7-amon2/">ゼロからはじめるAmon2 - Hokkaido.pm#7</a></li>
-                    <li><a href="slides/20120418-hokkaidopm-casual0-perl-5-16/">perl-5.16 - Hokkaido.pm Casual#0</a></li>
-                    <li><a href="slides/20120418-hokkaidopm-casual0-lt/">自己紹介 + 小ネタ - Hokkaido.pm Casual#0</a></li>
-                </ul>
-                <h4>2011</h4>
-                <ul>
-                    <li><a href="slides/20111210-hokkaidopm6-bot/">botのつくりかた - Hokkaido.pm#6</a></li>
-                    <li><a href="slides/20111016-yapcasia2011-why/">なぜ、高校生がPerlを使うのか？- YAPC::Asia 2011</a></li>
-                    <li><a href="slides/20110716-hokkaidopm-collector64/">Base64を再実装する - Hokkaido.pm#5</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <h3>CTF</h3>
+    <p>I'm participating CTF with team dodododo <a href="https://ctftime.org/team/6434">https://ctftime.org/team/6434</a>.</p>
+    <ul>
+        <li>
+            2014
+            <ul>
+                <li>CODEGATE Junior 2014 Finals (individual)</li>
+            </ul>
+        </li>
+        <li>
+            2013
+            <ul>
+                <li>SECCON 2013 Finals (dodododo)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>PRODUCTS</h3>
+    <h4><a href="http://adctf2014.katsudon.org/">Advent Calendar CTF 2014</a></h4>
+    <p>X-mas CTF. There are 25 challenges. <a href="https://twitter.com/search?f=realtime&q=%23adctf2014&src=hash">#adctf2014</a></p>
+    <h4><a href="http://ctf.katsudon.org/">akictf</a></h4>
+    <p><a href="http://ctf.katsudon.org/"><img src="src/img/akictf.png" alt="akictf" /></a></p>
+    <p>Yet Another CTF?<br />There are 40 or more CTF problems. It was inspired by ksnctf.</p>
+    <h4><a href="http://sqli.katsudon.org/">SQLiPuzzle</a></h4>
+    <p><a href="http://sqli.katsudon.org/"><img src="src/img/sqlipuzzle.png" alt="sqlipuzzle" /></a></p>
+    <p>Learning SQL Injection (on Heroku)</p>
 </body>
 </html>
